@@ -19,6 +19,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   late final TextEditingController _password = TextEditingController();
   bool isEmailCorrect = false;
   bool isPasswordCorrect = false;
+  bool isConfirmPasswordCorrect = false;
+  bool _obscureText1 = true;
+  bool _obscureText2 = true;
 
   @override
   void dispose() {
@@ -42,16 +45,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               const SizedBox(
                 height: 60,
-              ),
-              TextFormField(
-                enableSuggestions: false,
-                autocorrect: false,
-                decoration: const InputDecoration(
-                    prefixIcon: Icon(Icons.man_sharp),
-                    hintText: 'Username',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                    )),
               ),
               const SizedBox(
                 height: 10,
@@ -95,10 +88,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   });
                 },
                 controller: _password,
-                obscureText: true,
+                obscureText: _obscureText1,
                 enableSuggestions: false,
                 autocorrect: false,
                 decoration: InputDecoration(
+                    suffixIcon: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _obscureText1 = !_obscureText1;
+                        });
+                      },
+                      child: Icon(_obscureText1
+                          ? Icons.visibility
+                          : Icons.visibility_off),
+                    ),
                     labelText: "Password",
                     hintText: 'At least 6 characters',
                     prefixIcon: Icon(Icons.lock),
@@ -113,20 +116,58 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         borderRadius:
                             const BorderRadius.all(Radius.circular(10)))),
               ),
+              const SizedBox(height: 10),
+              TextFormField(
+                onChanged: (val) {
+                  setState(() {
+                    if (val == _password.text) {
+                      isConfirmPasswordCorrect = true;
+                    } else {
+                      isConfirmPasswordCorrect = false;
+                    }
+                  });
+                },
+                obscureText: _obscureText2,
+                enableSuggestions: false,
+                autocorrect: false,
+                decoration: InputDecoration(
+                    suffixIcon: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _obscureText2 = !_obscureText2;
+                        });
+                      },
+                      child: Icon(_obscureText2
+                          ? Icons.visibility
+                          : Icons.visibility_off),
+                    ),
+                    labelText: "Confirm Password",
+                    hintText: 'Reconfirm your password',
+                    prefixIcon: const Icon(Icons.lock),
+                    border: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: isConfirmPasswordCorrect == false
+                                ? Colors.red
+                                : Colors.green),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)))),
+              ),
               const SizedBox(
                 height: 30,
               ),
-              Container(
+              SizedBox(
                 width: double.infinity,
                 child: RawMaterialButton(
-                  fillColor:
-                      (isEmailCorrect & isPasswordCorrect == false)
-                          ? const Color.fromRGBO(76, 17, 244, 0.1)
-                          : const Color.fromRGBO(76, 17, 244, 1),
+                  fillColor: (isEmailCorrect & isPasswordCorrect & isConfirmPasswordCorrect == false)
+                      ? const Color.fromRGBO(76, 17, 244, 0.1)
+                      : const Color.fromRGBO(76, 17, 244, 1),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
                   padding: const EdgeInsets.symmetric(vertical: 12),
-                  onPressed: (isEmailCorrect & isPasswordCorrect == false)
+                  onPressed: (isEmailCorrect & isPasswordCorrect & isConfirmPasswordCorrect == false)
                       ? null
                       : () {
                           FirebaseAuth.instance
@@ -143,11 +184,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
-                                    title: Text("Error"),
+                                    title: const Text("Error"),
                                     content: Text(err.message),
                                     actions: [
                                       TextButton(
-                                        child: Text("Ok"),
+                                        child: const Text("Ok"),
                                         onPressed: () {
                                           Navigator.of(context).pop();
                                         },
