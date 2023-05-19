@@ -1,5 +1,7 @@
 import 'package:fitty/loginScreen.dart';
+import 'package:fitty/mainScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:fitty/nutrition/nutritionScreenStarted.dart';
 
 class OnBoardingScreen extends StatelessWidget {
   const OnBoardingScreen({super.key});
@@ -25,12 +27,16 @@ class OnBoardingScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     color: Colors.white),
               ),
-              const SizedBox(height: 10,),
+              const SizedBox(
+                height: 10,
+              ),
               const Text(
                 'Fitty is an app designed to improve fitness experience and help improve your fitness goals faster.',
                 style: TextStyle(fontSize: 20, color: Colors.white),
               ),
-              const SizedBox(height: 40,),
+              const SizedBox(
+                height: 40,
+              ),
               Center(
                 child: Container(
                   width: 170,
@@ -44,16 +50,19 @@ class OnBoardingScreen extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: ((context) => const LoginScreen())));
+                              builder: ((context) => MainScreen())));
                     },
                     child: const Text(
                       "Getting started",
-                      style: TextStyle(color: Color.fromRGBO(76, 17, 244, 1), fontSize: 17),
+                      style: TextStyle(
+                          color: Color.fromRGBO(76, 17, 244, 1), fontSize: 17),
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 40,)
+              const SizedBox(
+                height: 40,
+              )
             ],
           ),
         ),
