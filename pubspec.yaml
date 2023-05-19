@@ -40,7 +40,8 @@ dependencies:
   cloud_firestore: ^4.5.2
   firebase_analytics: ^10.2.1
   validators: ^3.0.0
-
+  flutter_spinkit: ^5.2.0
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -66,6 +67,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/IntroScreen.png
+    - assets/nutrition/nutritionStart.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
