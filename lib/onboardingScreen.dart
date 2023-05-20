@@ -50,7 +50,7 @@ class OnBoardingScreen extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: ((context) => MainScreen())));
+                              builder: ((context) => const LoginScreen())));
                     },
                     child: const Text(
                       "Getting started",
