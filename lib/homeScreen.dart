@@ -1,3 +1,5 @@
+import 'package:fitty/nutrition/calculateNutritionPage.dart';
+import 'package:fitty/nutrition/nutritionScreenStarted.dart';
 import 'package:flutter/material.dart';
 import 'loginScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -142,7 +144,12 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Container(
                               margin: EdgeInsets.only(right: 10),
                               child: ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: ((context) => NutritionScreenStarted())));
+                                },
                                 style: ButtonStyle(
                                   overlayColor: MaterialStateProperty.all(
                                     Colors.transparent,
@@ -156,6 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 ),
                                 child: Container(
+                                  
                                   width:
                                       MediaQuery.of(context).size.width * 0.4,
                                   height:

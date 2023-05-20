@@ -16,6 +16,7 @@ class _LoginScreenState extends State<LoginScreen> {
   late final TextEditingController _password = TextEditingController();
   bool isEmailCorrect = false;
   bool isPasswordCorrect = false;
+  bool _obscureText = true;
 
   @override
   void dispose() {
@@ -91,8 +92,18 @@ class _LoginScreenState extends State<LoginScreen> {
               controller: _password,
               autocorrect: false,
               enableSuggestions: false,
-              obscureText: true,
+              obscureText: _obscureText,
               decoration: InputDecoration(
+                  suffixIcon: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _obscureText = !_obscureText;
+                        });
+                      },
+                      child: Icon(_obscureText
+                          ? Icons.visibility
+                          : Icons.visibility_off),
+                    ),
                   border: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                   ),
@@ -107,7 +118,7 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(
               height: 40,
             ),
-            Container(
+            SizedBox(
               width: double.infinity,
               child: RawMaterialButton(
                 fillColor: isEmailCorrect & isPasswordCorrect == false
