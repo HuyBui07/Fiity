@@ -69,6 +69,9 @@ flutter:
   assets:
     - assets/IntroScreen.png
     - assets/nutrition/nutritionStart.png
+    - assets/HydrationAlarm.jpg
+    - assets/WorkoutMan.jpg
+    - assets/muscle/chooseMuscleImage/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
