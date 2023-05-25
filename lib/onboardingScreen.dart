@@ -1,7 +1,5 @@
 import 'package:fitty/loginScreen.dart';
-import 'package:fitty/mainScreen.dart';
 import 'package:flutter/material.dart';
-import 'package:fitty/nutrition/nutritionScreenStarted.dart';
 
 class OnBoardingScreen extends StatelessWidget {
   const OnBoardingScreen({super.key});
@@ -47,7 +45,7 @@ class OnBoardingScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10)),
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                               builder: ((context) => const LoginScreen())));

@@ -1,10 +1,7 @@
-import 'package:fitty/nutrition/calculateNutritionPage.dart';
-import 'package:fitty/nutrition/nutritionScreenStarted.dart';
-import 'package:flutter/material.dart';
-import 'loginScreen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:fitty/exercise/chooseMuscle.dart';
+import 'package:fitty/mainScreen/hydrationAlarmPage.dart';
+import 'package:fitty/mainScreen/nutrition/nutritionScreenStarted.dart';
+import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -207,7 +204,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Container(
                           margin: EdgeInsets.only(left: 10),
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: ((context) => HydrationAlarmPage()),
+                                ),
+                              );
+                            },
                             style: ButtonStyle(
                               overlayColor:
                                   MaterialStateProperty.all(Colors.transparent),

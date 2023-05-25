@@ -1,8 +1,9 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:fitty/onboardingScreen.dart';
 import 'package:flutter/material.dart';
-import 'loginScreen.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
+
+import 'loginScreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +21,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(home: HomePage());
+    return MaterialApp(
+      routes: {
+        '/login': (context) => LoginScreen(),
+        '/onboarding': (context) => OnBoardingScreen(),
+        '/': (context) => HomePage(),
+      },
+      initialRoute: '/',
+    );
   }
 }
 

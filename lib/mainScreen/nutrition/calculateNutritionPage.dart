@@ -1,6 +1,5 @@
+import 'package:fitty/mainScreen/nutrition/nutrient.dart';
 import 'package:flutter/material.dart';
-import 'package:fitty/nutrition/nutrient.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class NutritionCalculateScreen extends StatefulWidget {

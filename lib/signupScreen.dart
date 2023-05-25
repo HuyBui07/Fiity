@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
-import 'loginScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'mainScreen.dart';
+import 'package:fitty/mainScreen/mainScreen.dart';
+import 'package:flutter/material.dart';
 import 'package:validators/validators.dart';
+
+import 'loginScreen.dart';
 
 final RegExp emailRegex = RegExp(
     r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
@@ -161,13 +162,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
               SizedBox(
                 width: double.infinity,
                 child: RawMaterialButton(
-                  fillColor: (isEmailCorrect & isPasswordCorrect & isConfirmPasswordCorrect == false)
+                  fillColor: (isEmailCorrect &
+                              isPasswordCorrect &
+                              isConfirmPasswordCorrect ==
+                          false)
                       ? const Color.fromRGBO(76, 17, 244, 0.1)
                       : const Color.fromRGBO(76, 17, 244, 1),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
                   padding: const EdgeInsets.symmetric(vertical: 12),
-                  onPressed: (isEmailCorrect & isPasswordCorrect & isConfirmPasswordCorrect == false)
+                  onPressed: (isEmailCorrect &
+                              isPasswordCorrect &
+                              isConfirmPasswordCorrect ==
+                          false)
                       ? null
                       : () {
                           FirebaseAuth.instance

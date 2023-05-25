@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:fitty/nutrition/calculateNutritionPage.dart';
+import 'package:fitty/mainScreen/nutrition/calculateNutritionPage.dart';
 import 'package:fitty/transition/fadeRoute.dart';
+import 'package:flutter/material.dart';
 //NutritionScreen structure: Welcome ->  Calculate nutritionn ->  Show nutritionn
 
 class NutritionScreenStarted extends StatelessWidget {
