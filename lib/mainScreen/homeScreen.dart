@@ -1,10 +1,15 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:fitty/exercise/chooseMuscle.dart';
 import 'package:fitty/mainScreen/hydrationAlarmPage.dart';
 import 'package:fitty/mainScreen/nutrition/nutritionScreenStarted.dart';
+import 'package:fitty/user/user.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -12,12 +17,83 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   EdgeInsets buttonPadding = EdgeInsets.all(8.0);
-
+  String userName = "";
+  String infoPath = "";
   int _selectedIndex = 0; // Selected tab index
+
+  @override
+  void initState() {
+    super.initState();
+    InitializeName();
+  }
+
+  Future<void> setInfoPath() async {
+    infoPath = await UserLocal.getInfoPath();
+  }
+
+  Future<void> InitializeName() async {
+    await setInfoPath();
+    final file = File(infoPath);
+    if (await file.existsSync()) {
+      final jsonData = await file.readAsString();
+      final jsonMap = jsonDecode(jsonData);
+      userName = jsonMap["name"];
+    } else if (userName == "User") {
+      await _promptUserName();
+    } else {
+      // Empty profile
+      await _promptUserName();
+    }
+    setState(() {});
+  }
+
+  Future<void> _promptUserName() async {
+    final TextEditingController _nameController = TextEditingController();
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('What should we call you?\n(8 characters max)'),
+          content: TextField(
+            controller: _nameController,
+            inputFormatters: [
+              LengthLimitingTextInputFormatter(8),
+            ],
+            decoration: InputDecoration(
+              hintText: 'Name',
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                final name = _nameController.text;
+                if (name.isNotEmpty) {
+                  setState(() {
+                    userName = name;
+                  });
+                  final user = UserLocal(name: name);
+                  user.saveUserToFile(user);
+                  Navigator.pop(context);
+                }
+              },
+              child: Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFF1f1545),
       body: SafeArea(
         child: ListView(
           padding: EdgeInsets.symmetric(vertical: 30, horizontal: 0),
@@ -33,16 +109,20 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Text(
                           "Hello, ",
                           style: TextStyle(
-                              fontSize: 40, fontWeight: FontWeight.w500),
+                              color: Colors.white,
+                              fontSize: 40,
+                              fontWeight: FontWeight.w500),
                         ),
                       ),
                     ),
                     Container(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        "User!",
+                        userName,
                         style: TextStyle(
-                            fontSize: 40, fontWeight: FontWeight.w700),
+                            color: Colors.white,
+                            fontSize: 40,
+                            fontWeight: FontWeight.w700),
                       ),
                     )
                   ]),
@@ -56,10 +136,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           "What is your goal today?",
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.grey[600],
-                          ),
+                          style:
+                              TextStyle(fontSize: 18, color: Color(0xFFA5A5A5)),
                         ),
                       ),
                     )
@@ -269,5 +347,93 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+}
+
+class UserNamePrompt extends StatefulWidget {
+  final Function(String) onNameSubmitted;
+
+  const UserNamePrompt({Key? key, required this.onNameSubmitted})
+      : super(key: key);
+
+  @override
+  _UserNamePromptState createState() => _UserNamePromptState();
+}
+
+class _UserNamePromptState extends State<UserNamePrompt> {
+  late TextEditingController _nameController;
+  late FocusNode _nameFocusNode;
+  final int maxNameLength = 10;
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController();
+    _nameFocusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _nameFocusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedPadding(
+      padding: MediaQuery.of(context).viewInsets,
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeInOut,
+      child: SingleChildScrollView(
+        child: Container(
+          color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Enter your name',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 10),
+                TextField(
+                  controller: _nameController,
+                  focusNode: _nameFocusNode,
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(maxNameLength),
+                  ],
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Name',
+                  ),
+                  onSubmitted: (value) {
+                    _submitName();
+                  },
+                ),
+                SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: _submitName,
+                  child: Text('Submit'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _submitName() {
+    final name = _nameController.text.trim();
+    if (name.isNotEmpty) {
+      widget.onNameSubmitted(name);
+      _nameController.clear();
+      FocusManager.instance.primaryFocus?.unfocus();
+    }
   }
 }
