@@ -1,6 +1,11 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:fitty/mainScreen/nutrition/nutrient.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+
+import '../../user/user.dart';
 
 class NutritionCalculateScreen extends StatefulWidget {
   @override
@@ -14,6 +19,7 @@ class _NutritionCalculateScreenState extends State<NutritionCalculateScreen> {
   final TextEditingController ageController = TextEditingController();
   final TextEditingController weightController = TextEditingController();
   final TextEditingController heightController = TextEditingController();
+
   ActivityLevel selectedActivityLevel = ActivityLevel.littleNoExercise;
   Gender selectedGender = Gender.male;
 
@@ -46,6 +52,24 @@ class _NutritionCalculateScreenState extends State<NutritionCalculateScreen> {
   bool isValidNumber(String text) {
     final value = double.tryParse(text);
     return value != null && value > 0;
+  }
+
+  void loadUserData() async {
+    try {
+      final file = File(await UserLocal.getInfoPath());
+      //file is a json file that contains user infor. decode it
+      final jsonData = jsonDecode(await file.readAsString());
+      UserLocal user = UserLocal.userFromJson(jsonData);
+      setState(() {
+        ageController.text = user.age.toString();
+        weightController.text = user.weight.toString();
+        heightController.text = user.height.toString();
+        selectedActivityLevel = user.activityLevel;
+        selectedGender = user.gender;
+      });
+    } catch (e) {
+      print('Failed to load user data: $e');
+    }
   }
 
   @override
@@ -208,6 +232,15 @@ class _NutritionCalculateScreenState extends State<NutritionCalculateScreen> {
                               ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: mainColor,
+                    ),
+                  ),
+                  SizedBox(height: 16.0),
+                  ElevatedButton(
+                    onPressed: loadUserData,
+                    child: Text('Fill with your data'),
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(mainColor),
                     ),
                   ),
                   SizedBox(height: 16.0),
