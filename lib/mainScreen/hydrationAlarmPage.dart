@@ -1,73 +1,49 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
+import 'package:workmanager/workmanager.dart';
+
+const intervalTask = "interval";
+const oneTask = "oneTask";
 
 class HydrationAlarmPage extends StatefulWidget {
+  const HydrationAlarmPage({super.key});
   @override
   _HydrationAlarmPageState createState() => _HydrationAlarmPageState();
 }
 
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
 class _HydrationAlarmPageState extends State<HydrationAlarmPage> {
-  int minutes = 0;
+  Color textColor = Color(0xFFffffff);
+  Color backgroundColor = Color(0xFF000000);
+  Color mainButtonColor = Color(0xFF9d34da);
+  Color secondaryButtonColor = Color(0xFF1a1a1a);
+  Color accentColor = Color(0xFFbd73e8);
+
+  int minutes = 15;
   int hours = 0;
 
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
-
   @override
   void initState() {
     super.initState();
-    // Initialize the plugin
-    const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
-    final InitializationSettings initializationSettings =
-        InitializationSettings(android: initializationSettingsAndroid);
-    flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
     tz.initializeTimeZones();
-  }
-
-  Future<void> scheduleNotification() async {
-    // Cancel any previously scheduled notifications
-    await flutterLocalNotificationsPlugin.cancelAll();
-
-    // Configure the notification details
-    const AndroidNotificationDetails androidPlatformChannelSpecifics =
-        AndroidNotificationDetails(
-      'channel_id',
-      'channel_name',
-      importance: Importance.max,
-      priority: Priority.high,
-      showWhen: false,
-    );
-    const NotificationDetails platformChannelSpecifics =
-        NotificationDetails(android: androidPlatformChannelSpecifics);
-
-    // Calculate the scheduled time based on the selected hours and minutes
-    final now = tz.TZDateTime.now(tz.local);
-    final duration = Duration(hours: hours, minutes: minutes);
-    final scheduledDate = now.add(duration);
-
-    // Schedule the notification
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-      0,
-      'Hydration Reminder',
-      'Time to hydrate!',
-      scheduledDate,
-      platformChannelSpecifics,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-      androidAllowWhileIdle: true,
-      matchDateTimeComponents: DateTimeComponents.time,
-      payload: 'hydrate_payload',
-    );
+    Noti.initialize(flutterLocalNotificationsPlugin);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: backgroundColor,
       appBar: AppBar(
         title: Text('Hydration Alarm'),
+        backgroundColor: mainButtonColor,
       ),
       body: SingleChildScrollView(
         child: Center(
@@ -81,7 +57,13 @@ class _HydrationAlarmPageState extends State<HydrationAlarmPage> {
                   style: TextStyle(
                     fontSize: 20.0,
                     fontWeight: FontWeight.bold,
+                    color: textColor,
                   ),
+                ),
+                SizedBox(height: 15.0),
+                Text(
+                  '(Minimum value is 15 minutes)',
+                  style: TextStyle(fontSize: 15.0, color: Colors.grey),
                 ),
                 SizedBox(height: 50.0),
                 Row(
@@ -108,11 +90,15 @@ class _HydrationAlarmPageState extends State<HydrationAlarmPage> {
                                   if (hours < 24) hours++;
                                 });
                               },
-                              icon: Icon(Icons.arrow_upward),
+                              icon: Icon(
+                                Icons.arrow_upward,
+                                color: textColor,
+                              ),
                             ),
                             Text(
                               '${hours.toString().padLeft(2, '0')}',
-                              style: TextStyle(fontSize: 50.0),
+                              style:
+                                  TextStyle(fontSize: 50.0, color: textColor),
                             ),
                             IconButton(
                               onPressed: () {
@@ -121,6 +107,7 @@ class _HydrationAlarmPageState extends State<HydrationAlarmPage> {
                                 });
                               },
                               icon: Icon(Icons.arrow_downward),
+                              color: textColor,
                             ),
                           ],
                         ),
@@ -128,14 +115,16 @@ class _HydrationAlarmPageState extends State<HydrationAlarmPage> {
                     ),
                     Text(
                       ':',
-                      style: TextStyle(fontSize: 50.0),
+                      style: TextStyle(fontSize: 50.0, color: textColor),
                     ),
                     GestureDetector(
                       onVerticalDragUpdate: (details) {
                         setState(() {
                           int delta = (details.delta.dy / 4).round();
                           minutes -= delta;
-                          if (minutes < 0) {
+                          if (minutes < 15 && hours == 0) {
+                            minutes = 15;
+                          } else if (minutes < 0) {
                             if (hours > 0) {
                               hours--;
                               minutes = 59;
@@ -159,19 +148,25 @@ class _HydrationAlarmPageState extends State<HydrationAlarmPage> {
                                   if (minutes < 59) minutes++;
                                 });
                               },
-                              icon: Icon(Icons.arrow_upward),
+                              icon: Icon(Icons.arrow_upward, color: textColor),
                             ),
                             Text(
                               '${minutes.toString().padLeft(2, '0')}',
-                              style: TextStyle(fontSize: 50.0),
+                              style:
+                                  TextStyle(fontSize: 50.0, color: textColor),
                             ),
                             IconButton(
                               onPressed: () {
                                 setState(() {
-                                  if (minutes > 0) minutes--;
+                                  if (minutes <= 15 && hours == 0) {
+                                    minutes = 15;
+                                  } else if (minutes > 0) minutes--;
                                 });
                               },
-                              icon: Icon(Icons.arrow_downward),
+                              icon: Icon(
+                                Icons.arrow_downward,
+                                color: textColor,
+                              ),
                             ),
                           ],
                         ),
@@ -181,15 +176,90 @@ class _HydrationAlarmPageState extends State<HydrationAlarmPage> {
                 ),
                 SizedBox(height: 50.0),
                 ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(mainButtonColor),
+                  ),
                   onPressed: () {
-                    scheduleNotification();
+                    //Convert minute and hours to second in tz.Datetime. If it's zero, alarm user to  make it bigger than zero. Other wise start schedule
+                    int seconds = minutes * 60 + hours * 3600;
+
+                    if (seconds < 900) {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text('Error'),
+                              content: Text(
+                                  'Please set the alarm to a time equal or greater than 15 minutes.'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('OK'),
+                                ),
+                              ],
+                            );
+                          });
+                    } else {
+                      //alarm user of successful notification
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text('Success'),
+                              content: Text('Your reminder has been set!.'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('OK'),
+                                ),
+                              ],
+                            );
+                          });
+                      Workmanager().cancelAll();
+                      Workmanager().registerPeriodicTask(
+                        intervalTask,
+                        intervalTask,
+                        frequency: Duration(seconds: seconds),
+                      );
+
+                      // Workmanager().registerOneOffTask(oneTask, oneTask);
+                      //Pop this page
+                    }
                   },
                   child: Text('Set Alarm'),
                 ),
                 SizedBox(height: 10.0),
                 ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(mainButtonColor),
+                  ),
                   onPressed: () {
                     // TODO: Handle alarm removal
+                    Workmanager().cancelAll();
+                    //Alert user that all task is cancelled
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Text('Success'),
+                            content: Text('Your reminder has been cancelled!'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('OK'),
+                              ),
+                            ],
+                          );
+                        });
+                    print("All task cancelled");
                   },
                   child: Text('Remove Alarm'),
                 ),
@@ -199,5 +269,38 @@ class _HydrationAlarmPageState extends State<HydrationAlarmPage> {
         ),
       ),
     );
+  }
+}
+
+class Noti {
+  static Future initialize(
+      FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) async {
+    var androidInitialize = new AndroidInitializationSettings('app_icon');
+    var iOSInitialize = new DarwinInitializationSettings();
+    var initializeSettings = new InitializationSettings(
+        android: androidInitialize, iOS: iOSInitialize);
+    await flutterLocalNotificationsPlugin.initialize(initializeSettings);
+  }
+
+  static Future ShowNotification({
+    required String title,
+    required String body,
+    required FlutterLocalNotificationsPlugin fln,
+  }) async {
+    await fln.cancelAll();
+
+    AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+      "Channel 1",
+      "Hydration Alarm",
+      importance: Importance.max,
+      priority: Priority.high,
+      styleInformation: BigTextStyleInformation(body),
+    );
+    var not = NotificationDetails(
+      android: androidDetails,
+      iOS: DarwinNotificationDetails(),
+    );
+    fln.show(0, title, body, not);
+    if (title == "Hydration reminder!") print("Success");
   }
 }
