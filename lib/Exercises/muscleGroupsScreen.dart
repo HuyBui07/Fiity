@@ -1,6 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:convert';
 
 import 'exercise.dart';
 import 'exerciseScreen.dart';
@@ -14,7 +15,11 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
   List<Exercise> _allExercises = [];
   List<String> _musclesList = [];
   List<Exercise> _selectedExercises = [];
-
+  Color textColor = Color(0xFFffffff);
+  Color backgroundColor = Color(0xFF000000);
+  Color mainButtonColor = Color(0xFF9d34da);
+  Color secondaryButtonColor = Color(0xFF1a1a1a);
+  Color accentColor = Color(0xFFbd73e8);
   _loadExercises() async {
     String data = await rootBundle.loadString('assets/exercises.json');
     List<dynamic> jsonList = json.decode(data);
@@ -33,12 +38,14 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
 
   _updateSelectedExercises(String muscle) {
     setState(() {
-      _selectedExercises = _allExercises.where((e) => e.muscle == muscle).toList();
+      _selectedExercises =
+          _allExercises.where((e) => e.muscle == muscle).toList();
     });
 
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => ExerciseScreen(exercises: _selectedExercises)),
+      MaterialPageRoute(
+          builder: (_) => ExerciseScreen(exercises: _selectedExercises)),
     );
   }
 
@@ -51,8 +58,12 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFF1f1545),
       appBar: AppBar(
-        title: const Text('Muscle Groups'),
+        centerTitle: true,
+        title: const Text('Muscle groups'),
+        backgroundColor: Color(0xFF1f1545),
+        elevation: 0,
       ),
       body: Column(
         children: [
@@ -60,13 +71,25 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
             child: ListView.builder(
               itemCount: _musclesList.length,
               itemBuilder: (BuildContext context, int index) {
-                return InkWell(
-                  onTap: () => _updateSelectedExercises(_musclesList[index]),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Text(_musclesList[index]),
+                return Container(
+                  margin: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                  child: ListTile(
+                    onTap: () => _updateSelectedExercises(_musclesList[index]),
+                    tileColor: Color(0xff302360),
+                    title: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        FilterMuscleGroupText(_musclesList[index]),
+                        style: TextStyle(
+                          color: Color.fromARGB(251, 255, 255, 255),
+                          fontSize: 20,
+                        ),
+                      ),
                     ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    style: ListTileStyle.list,
                   ),
                 );
               },
@@ -76,4 +99,11 @@ class _MuscleGroupsScreenState extends State<MuscleGroupsScreen> {
       ),
     );
   }
+}
+
+String FilterMuscleGroupText(String text) {
+  //upercase first letter and remove "_", replace with spacing
+  text = text[0].toUpperCase() + text.substring(1);
+  text = text.replaceAll("_", " ");
+  return text;
 }

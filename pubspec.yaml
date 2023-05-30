@@ -82,7 +82,8 @@ flutter:
     - assets/muscle/chooseMuscleImage/
     - assets/exercises.json
     - assets/exercises/2.gif
-
+    - assets/exercises/
+    - assets/
   generate:
     - json_serializable
 

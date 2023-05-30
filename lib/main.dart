@@ -59,13 +59,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      initialRoute: '/',
       routes: {
         '/login': (context) => LoginScreen(),
         '/onboarding': (context) => OnBoardingScreen(),
         '/': (context) => HomePage(),
         '/editInfo': (context) => EditInformationPage(),
       },
-      initialRoute: '/',
     );
   }
 }

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:fitty/exercise/chooseMuscle.dart';
+import 'package:fitty/Exercises/muscleGroupsScreen.dart';
 import 'package:fitty/mainScreen/hydrationAlarmPage.dart';
 import 'package:fitty/mainScreen/nutrition/nutritionScreenStarted.dart';
 import 'package:fitty/user/user.dart';
@@ -157,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: ((context) => ChooseMuscleGroup()),
+                                  builder: ((context) => MuscleGroupsScreen()),
                                 ),
                               );
                             },

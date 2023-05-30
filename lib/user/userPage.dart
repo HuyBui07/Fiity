@@ -137,7 +137,7 @@ class _UserPageState extends State<UserPage> {
             children: [
               CircleAvatar(
                 radius: 50,
-                backgroundImage: AssetImage('assets/WorkoutMan.jpg'),
+                backgroundImage: AssetImage('assets/UserIcon.png'),
               ),
               SizedBox(
                 height: 24,

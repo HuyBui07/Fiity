@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'exercise.dart';
 
 class ExerciseScreen extends StatefulWidget {
@@ -49,7 +50,9 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: const Text('Exercises'),
+        backgroundColor: Color(0xFF1f1545),
       ),
       body: Column(
         children: [
@@ -96,11 +99,10 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
                 return Card(
                   child: ListTile(
                     onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (_) {
-                            return ExerciseDetailsScreen(
-                                exercise: _filterExercises()[index]);
-                          }));
+                      Navigator.push(context, MaterialPageRoute(builder: (_) {
+                        return ExerciseDetailsScreen(
+                            exercise: _filterExercises()[index]);
+                      }));
                     },
                     title: Text(_filterExercises()[index].name),
                     subtitle: Text(_filterExercises()[index].difficulty),
@@ -126,6 +128,7 @@ class ExerciseDetailsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(exercise.name),
+        backgroundColor: Color(0xFF1f1545),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -135,35 +138,36 @@ class ExerciseDetailsScreen extends StatelessWidget {
             children: [
               Container(
                 height: 250,
+                width: MediaQuery.of(context).size.width * 1,
                 child: Image.asset(
                   'assets/exercises/$gifName',
-                  fit: BoxFit.cover,
+                  fit: BoxFit.fill,
                 ),
               ),
               SizedBox(height: 16),
               Text(
                 'Muscle: ${exercise.muscle}',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 8),
               Text(
                 'Equipment: ${exercise.equipment}',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 8),
               Text(
                 'Difficulty: ${exercise.difficulty}',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 16),
+              SizedBox(height: 8),
               Text(
                 'Instructions:',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 8),
               Text(
                 exercise.instructions,
-                style: TextStyle(fontSize: 16),
+                style: TextStyle(fontSize: 16, color: Colors.blueGrey[800]),
               ),
             ],
           ),
