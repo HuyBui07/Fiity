@@ -1,8 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitty/mainScreen/mainScreen.dart';
 import 'package:flutter/material.dart';
 import 'signupScreen.dart';
 import 'mainScreen/mainScreen.dart';
 import 'package:validators/validators.dart';
+
+import 'signupScreen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -83,10 +86,10 @@ class _LoginScreenState extends State<LoginScreen> {
               onChanged: (value) {
                 setState(() {
                   if (value.length < 6) {
-                      isPasswordCorrect = false;
-                    } else {
-                      isPasswordCorrect = true;
-                    }
+                    isPasswordCorrect = false;
+                  } else {
+                    isPasswordCorrect = true;
+                  }
                 });
               },
               controller: _password,
@@ -95,15 +98,14 @@ class _LoginScreenState extends State<LoginScreen> {
               obscureText: _obscureText,
               decoration: InputDecoration(
                   suffixIcon: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _obscureText = !_obscureText;
-                        });
-                      },
-                      child: Icon(_obscureText
-                          ? Icons.visibility
-                          : Icons.visibility_off),
-                    ),
+                    onTap: () {
+                      setState(() {
+                        _obscureText = !_obscureText;
+                      });
+                    },
+                    child: Icon(
+                        _obscureText ? Icons.visibility : Icons.visibility_off),
+                  ),
                   border: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                   ),
@@ -134,6 +136,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             .signInWithEmailAndPassword(
                                 email: _email.text, password: _password.text)
                             .then((value) {
+                          print("create new account");
                           Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -156,6 +159,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 );
                               });
                         });
+                        // ignore: use_build_context_synchronously
                       },
                 child: const Text(
                   "Login",
