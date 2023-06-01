@@ -179,12 +179,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       : () async {
                           FocusScope.of(context).unfocus();
 
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return const Center(
-                                    child: CircularProgressIndicator());
-                              });
+                  
 
                           await FirebaseAuth.instance
                               .createUserWithEmailAndPassword(
@@ -214,7 +209,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 });
                           });
                           // ignore: use_build_context_synchronously
-                          Navigator.of(context).pop();
+                          
                         },
                   child: const Text(
                     "Sign up",
