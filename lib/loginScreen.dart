@@ -6,6 +6,7 @@ import 'mainScreen/mainScreen.dart';
 import 'package:validators/validators.dart';
 
 import 'signupScreen.dart';
+import 'forgotpassscreen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -118,6 +119,28 @@ class _LoginScreenState extends State<LoginScreen> {
                           const BorderRadius.all(Radius.circular(10)))),
             ),
             const SizedBox(
+              height: 10,
+            ),
+            Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: ((context) => ForgotPassword())));
+                },
+                child: Text(
+                  'Forgot password?',
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                      color: Color.fromRGBO(76, 17, 244, 1)),
+                ),
+              ),
+            ]),
+            const SizedBox(
               height: 40,
             ),
             SizedBox(
@@ -131,12 +154,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 onPressed: isEmailCorrect & isPasswordCorrect == false
                     ? null
-                    : () {
-                        FirebaseAuth.instance
+                    : () async {
+                        FocusScope.of(context).unfocus();
+
+                        await FirebaseAuth.instance
                             .signInWithEmailAndPassword(
                                 email: _email.text, password: _password.text)
                             .then((value) {
-                          print("create new account");
                           Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -191,7 +215,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           fontFamily: 'Poppins',
                           fontWeight: FontWeight.w500,
                           fontSize: 14,
-                          color: Color(0xff006175))),
+                          color: Color.fromRGBO(76, 17, 244, 1))),
                 )
               ],
             ),

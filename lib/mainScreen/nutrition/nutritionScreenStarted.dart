@@ -1,3 +1,4 @@
+import 'package:fitty/mainScreen/mainScreen.dart';
 import 'package:fitty/mainScreen/nutrition/calculateNutritionPage.dart';
 import 'package:fitty/transition/fadeRoute.dart';
 import 'package:flutter/material.dart';
@@ -19,8 +20,16 @@ class NutritionScreenStarted extends StatelessWidget {
                 vertical: MediaQuery.of(context).size.height * 0.1,
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  IconButton(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: ((context) => const MainScreen())));
+                      },
+                      icon: const Icon(Icons.arrow_back)),
                   Center(
                     child: Container(
                       alignment: Alignment.center,

@@ -340,6 +340,18 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
+                  const SizedBox(height: 35),
+                  Center(
+                    child: Container(
+                      height: 60,
+                      width: 60,
+                      decoration: BoxDecoration(
+                        color: Color.fromRGBO(76, 17, 244, 1),
+                        borderRadius: BorderRadius.circular(30)
+                      ),
+                      child: Icon(Icons.add, color: Colors.white,size: 30,),
+                    ),
+                  )
                 ],
               ),
             ),

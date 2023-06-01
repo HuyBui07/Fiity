@@ -176,8 +176,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               isConfirmPasswordCorrect ==
                           false)
                       ? null
-                      : () {
-                          FirebaseAuth.instance
+                      : () async {
+                          FocusScope.of(context).unfocus();
+
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              });
+
+                          await FirebaseAuth.instance
                               .createUserWithEmailAndPassword(
                                   email: _email.text, password: _password.text)
                               .then((value) {
@@ -204,6 +213,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   );
                                 });
                           });
+                          // ignore: use_build_context_synchronously
+                          Navigator.of(context).pop();
                         },
                   child: const Text(
                     "Sign up",
