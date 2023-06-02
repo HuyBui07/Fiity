@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:fitty/user/globals.dart';
+import 'package:fitty/mainScreen/nutrition/nutrient.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -47,6 +48,11 @@ class _HomeScreenState extends State<HomeScreen> {
       await _promptUserName();
     }
     setState(() {});
+    calories = NutrientCalculator.calculateCalories(
+        double.tryParse(UserLocal().weight.toString())!,
+        double.tryParse(UserLocal().height.toString())!,
+        UserLocal().activityLevel,
+        UserLocal().gender);
   }
 
   Future<void> _promptUserName() async {
@@ -94,6 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _promptCaloriesChange() async {
     final TextEditingController _caloriesController = TextEditingController();
+    double caloriescontroller = 0;
     return showDialog(
       context: context,
       builder: (context) {
@@ -113,29 +120,40 @@ class _HomeScreenState extends State<HomeScreen> {
             TextButton(
               onPressed: () {
                 setState(() {
-                  if (caloriesaday - double.parse(_caloriesController.text)>
+                  if (_caloriesController.text == "") {
+                    Navigator.pop(context);
+                  } else {
+                    if (caloriesaday - double.parse(_caloriesController.text)>
                       0) {
                     caloriesaday = calories;
+                    Navigator.pop(context);
                   } else {
                     caloriesaday -= double.parse(_caloriesController.text);
+                    Navigator.pop(context);
                   }
+                  }  
                 });
 
-                Navigator.pop(context);
+                
               },
               child: Text('Subtract'),
             ),
             TextButton(
               onPressed: () {
                 setState(() {
-                  if (caloriesaday >
-                      calories - double.parse(_caloriesController.text)) {
+                  if (_caloriesController.text == "") {
+                    Navigator.pop(context);
+                  } else {
+                    if (caloriesaday - double.parse(_caloriesController.text)>
+                      0) {
                     caloriesaday = calories;
+                    Navigator.pop(context);
                   } else {
                     caloriesaday += double.parse(_caloriesController.text);
+                    Navigator.pop(context);
                   }
+                  }  
                 });
-                Navigator.pop(context);
               },
               child: Text('Add'),
             ),
