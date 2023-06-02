@@ -123,9 +123,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   if (_caloriesController.text == "") {
                     Navigator.pop(context);
                   } else {
-                    if (caloriesaday - double.parse(_caloriesController.text)>
+                    if (caloriesaday - double.parse(_caloriesController.text)<
                       0) {
-                    caloriesaday = calories;
+                    caloriesaday = 0;
                     Navigator.pop(context);
                   } else {
                     caloriesaday -= double.parse(_caloriesController.text);
@@ -144,8 +144,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   if (_caloriesController.text == "") {
                     Navigator.pop(context);
                   } else {
-                    if (caloriesaday - double.parse(_caloriesController.text)>
-                      0) {
+                    if (caloriesaday > calories - double.parse(_caloriesController.text) 
+                      ) {
                     caloriesaday = calories;
                     Navigator.pop(context);
                   } else {
@@ -435,7 +435,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               borderRadius: BorderRadius.circular(25)),
                           child: Icon(
                             Icons.bolt,
-                            color: Colors.white,
+                            color: caloriesaday == calories ? Colors.green : Colors.white,
                             size: 40,
                           ),
                         ),

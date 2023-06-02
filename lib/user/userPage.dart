@@ -6,6 +6,7 @@ import 'package:fitty/user/editInformationPage.dart';
 import 'package:fitty/user/user.dart';
 import 'package:flutter/material.dart';
 import 'globals.dart';
+import 'package:fitty/mainScreen/nutrition/nutrient.dart';
 
 
 class UserPage extends StatefulWidget {
@@ -66,7 +67,11 @@ class _UserPageState extends State<UserPage> {
         userGender = userMap['gender'].toString();
         userWeight = userMap['weight'].toString();
         userActivityLevel = userMap['activityLevel'].toString();
-        userCalories = 655.1 + (9.563 * userMap['weight']) + (1.850 * userMap['height']) - (4.676 * userMap['age']);
+        userCalories = NutrientCalculator.calculateCalories(
+        double.tryParse(UserLocal().weight.toString())!,
+        double.tryParse(UserLocal().height.toString())!,
+        UserLocal().activityLevel,
+        UserLocal().gender);
       }
 
 
