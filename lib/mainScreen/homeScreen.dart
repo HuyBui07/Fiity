@@ -7,6 +7,8 @@ import 'package:fitty/mainScreen/nutrition/nutritionScreenStarted.dart';
 import 'package:fitty/user/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:fitty/user/globals.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -83,6 +85,59 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
               },
               child: Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _promptCaloriesChange() async {
+    final TextEditingController _caloriesController = TextEditingController();
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Input your meals calories'),
+          content: TextField(
+            keyboardType: TextInputType.numberWithOptions(decimal: true),
+            controller: _caloriesController,
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,2}'))
+            ],
+            decoration: InputDecoration(
+              hintText: 'Calories',
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  if (caloriesaday - double.parse(_caloriesController.text)>
+                      0) {
+                    caloriesaday = calories;
+                  } else {
+                    caloriesaday -= double.parse(_caloriesController.text);
+                  }
+                });
+
+                Navigator.pop(context);
+              },
+              child: Text('Subtract'),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  if (caloriesaday >
+                      calories - double.parse(_caloriesController.text)) {
+                    caloriesaday = calories;
+                  } else {
+                    caloriesaday += double.parse(_caloriesController.text);
+                  }
+                });
+                Navigator.pop(context);
+              },
+              child: Text('Add'),
             ),
           ],
         );
@@ -340,18 +395,35 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 35),
-                  Center(
-                    child: Container(
-                      height: 60,
-                      width: 60,
-                      decoration: BoxDecoration(
-                        color: Color.fromRGBO(76, 17, 244, 1),
-                        borderRadius: BorderRadius.circular(30)
+                  const SizedBox(height: 17),
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    CircularPercentIndicator(
+                      lineWidth: 10,
+                      radius: 50,
+                      progressColor: Colors.deepPurple,
+                      backgroundColor: Colors.deepPurple.shade100,
+                      percent: caloriesaday / calories,
+                      center: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _promptCaloriesChange();
+                          });
+                        },
+                        child: Container(
+                          height: 50,
+                          width: 50,
+                          decoration: BoxDecoration(
+                              color: Colors.deepPurple,
+                              borderRadius: BorderRadius.circular(25)),
+                          child: Icon(
+                            Icons.bolt,
+                            color: Colors.white,
+                            size: 40,
+                          ),
+                        ),
                       ),
-                      child: Icon(Icons.add, color: Colors.white,size: 30,),
                     ),
-                  )
+                  ])
                 ],
               ),
             ),

@@ -5,6 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitty/user/editInformationPage.dart';
 import 'package:fitty/user/user.dart';
 import 'package:flutter/material.dart';
+import 'globals.dart';
+
 
 class UserPage extends StatefulWidget {
   const UserPage({Key? key}) : super(key: key);
@@ -53,6 +55,7 @@ class _UserPageState extends State<UserPage> {
       String? userWeight;
       String? userGender;
       String? userActivityLevel;
+      double? userCalories;
 
       if (await file.exists()) {
         final jsonData = await file.readAsString();
@@ -63,7 +66,10 @@ class _UserPageState extends State<UserPage> {
         userGender = userMap['gender'].toString();
         userWeight = userMap['weight'].toString();
         userActivityLevel = userMap['activityLevel'].toString();
+        userCalories = 655.1 + (9.563 * userMap['weight']) + (1.850 * userMap['height']) - (4.676 * userMap['age']);
       }
+
+
 
       setState(() {
         name = userName ?? "Unknown";
@@ -71,6 +77,7 @@ class _UserPageState extends State<UserPage> {
         height = userHeight ?? "Unknown";
         weight = userWeight ?? "Unknown";
         gender = userGender ?? "Unknown";
+        calories = userCalories ?? 0;
         switch (userActivityLevel) {
           case "littleNoExercise":
             activityLevel = "Little exercise";
@@ -320,6 +327,36 @@ class _UserPageState extends State<UserPage> {
                     Flexible(
                       child: Text(
                         activityLevel,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(24, 0, 24, 0),
+                child: Row(
+                  children: [
+                    Text(
+                      "Calories/day:",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Flexible(
+                      child: Text(
+                        calories.round().toString(),
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 24,
