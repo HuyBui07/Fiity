@@ -46,13 +46,14 @@ class _HomeScreenState extends State<HomeScreen> {
     } else {
       // Empty profile
       await _promptUserName();
-    }
-    setState(() {});
-    calories = NutrientCalculator.calculateCalories(
+      calories = NutrientCalculator.calculateCalories(
         double.tryParse(UserLocal().weight.toString())!,
         double.tryParse(UserLocal().height.toString())!,
         UserLocal().activityLevel,
         UserLocal().gender);
+    }
+    setState(() {});
+
   }
 
   Future<void> _promptUserName() async {

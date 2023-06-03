@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'globals.dart';
 import 'package:fitty/mainScreen/nutrition/nutrient.dart';
 
-
 class UserPage extends StatefulWidget {
   const UserPage({Key? key}) : super(key: key);
 
@@ -30,6 +29,46 @@ class _UserPageState extends State<UserPage> {
     super.initState();
 
     setNameFromUserFile();
+  }
+
+  ActivityLevel convertAL(String x) {
+    switch (x) {
+      case "littleNoExercise":
+        return ActivityLevel.littleNoExercise;
+
+      case "oneTwoTimesWeek":
+        return ActivityLevel.littleNoExercise;
+
+      case "twoThreeTimesWeek":
+        return ActivityLevel.littleNoExercise;
+
+      case "threeFiveTimesWeek":
+        return ActivityLevel.littleNoExercise;
+
+      case "sixSevenTimesWeek":
+        return ActivityLevel.littleNoExercise;
+
+      case "professionalAthlete":
+        return ActivityLevel.littleNoExercise;
+
+      default:
+        return ActivityLevel.littleNoExercise;
+        ;
+    }
+  }
+
+  Gender convertGD(String x) {
+    switch (x) {
+      case "male":
+        return Gender.male;
+
+      case "female":
+        return Gender.female;
+
+      default:
+        return Gender.male;
+
+    }
   }
 
   Future<void> setInfoPath() async {
@@ -68,13 +107,11 @@ class _UserPageState extends State<UserPage> {
         userWeight = userMap['weight'].toString();
         userActivityLevel = userMap['activityLevel'].toString();
         userCalories = NutrientCalculator.calculateCalories(
-        double.tryParse(UserLocal().weight.toString())!,
-        double.tryParse(UserLocal().height.toString())!,
-        UserLocal().activityLevel,
-        UserLocal().gender);
+            double.tryParse(userHeight)!,
+            double.tryParse(userWeight)!,
+            convertAL(userActivityLevel),
+            convertGD(userGender));
       }
-
-
 
       setState(() {
         name = userName ?? "Unknown";
